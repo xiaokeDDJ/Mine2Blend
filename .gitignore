@@ -1,0 +1,27 @@
+# 构建产物 / Build outputs
+build/
+.gradle/
+dist/
+out/
+*.class
+__pycache__/
+*.pyc
+
+# 本地开发 / Local development only
+mod/run/
+mod/dev.gradle
+*.blend
+*.blend1
+
+# 编辑器 / IDE
+.idea/
+.vscode/
+*.iml
+
+# 机密信息（永远不要提交）/ Secrets – never commit
+.env
+*.env
+*.key
+*.pem
+*token*
+*secret*

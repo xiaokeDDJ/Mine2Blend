@@ -1,0 +1,15 @@
+schema_version = "1.0.0"
+
+id = "mine2blend"
+version = "1.0.0"
+name = "Mine2Blend"
+tagline = "Import live Minecraft worlds into Blender with real textures"
+maintainer = "Mine2Blend contributors"
+type = "add-on"
+
+blender_version_min = "4.2.0"
+
+license = ["SPDX:GPL-3.0-or-later"]
+
+[permissions]
+network = "Connect to the Mine2Blend mod on this computer to read blocks"
