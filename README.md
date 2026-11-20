@@ -4,25 +4,60 @@
 
 > English summary at the bottom.
 
-Mine2Blend 由两部分组成：
+## ✨ 核心特点：纯净导入
+
+Mine2Blend 导入的场景**干净、可直接用于制作**，不会往你的工程里塞任何多余的东西：
+
+- **材质只有两个节点**：每个材质就是「图像纹理 → 原理化 BSDF」，没有节点组、没有颜色混合节点、没有自定义着色器。打开材质就能看懂、能直接改。
+- **染色已烘焙进贴图**：草、树叶、水的群系颜色直接写进贴图副本，不需要额外的相乘节点或颜色属性。
+- **不创建辅助物体**：选区只是数值，在 3D 视图里画成线框，不会留下线框盒、预览平面之类的几何体。
+- **平直着色、像素风贴图**：全部为平直着色，贴图使用最近邻插值，保持方块的清晰边缘。
+- **材质命名清晰**：材质名就是贴图名（如 `MC_block/stone`），贴图打包在 `.blend` 内。
+- **按需才加节点**：只有在游戏里启用了带 LabPBR 贴图的资源包时，才会额外连接法线、粗糙度等节点，而且可以在导入设置里关掉。
+
+![导入后的材质节点：只有一个图像纹理和一个原理化 BSDF](docs/images/clean-nodes.webp)
+<sub>导入后的材质节点：一个图像纹理 + 一个原理化 BSDF，没有任何多余节点。</sub>
+
+### 按方块类型拆分
+
+除了「合并为一个物体」，还可以按方块类型拆分（每种方块一个物体，方便统一替换材质或隐藏某类方块），或按单个方块拆分（每个方块一个物体，原点在方块底面中心，方便做动画）。
+
+![按方块类型拆分导入](docs/images/split-by-type.webp)
+<sub>按方块类型拆分：大纲视图里每种方块（以及每种实体）各是一个物体。</sub>
+
+### 面数优化：合并相邻同材质面
+
+把同一平面上相邻、材质相同的整格方块面合并成大面，墙面、地面、屋顶这类整块方块的面数会明显减少（实测约减少七成），合并前后贴图效果完全一致。
+
+![合并相邻同材质面后的网格](docs/images/face-merge.webp)
+<sub>开启「合并相邻同材质面」后，整块的墙面和地面都合并成了大面。</sub>
+
+### 跟随游戏内加载的材质
+
+贴图直接取自游戏**当前启用的资源包**：没有资源包就是原版或模组默认贴图，启用了资源包就用资源包的贴图。在游戏里换了资源包后重新导入，Blender 里的贴图会自动替换。
+
+![跟随游戏内资源包导入的贴图](docs/images/resource-pack.webp)
+<sub>导入的贴图与游戏里看到的一致，材质依旧只有图像纹理 + 原理化 BSDF。</sub>
+
+## 组成
 
 | 部分 | 运行在 | 作用 |
 |---|---|---|
 | **Mine2Blend mod**（`mine2blend-<版本>.jar`） | Minecraft 1.20.1（Fabric） | 选区棒；在本机开一个只读接口，把游戏里的方块模型、贴图、方块实体和实体交给 Blender |
 | **Mine2Blend Blender 插件**（`mine2blend-blender-<版本>.zip`） | Blender 4.0 ~ 5.3 | 地图选区窗口；生成网格和原理化 BSDF 材质 |
 
-## 功能
+## 全部功能
 
 - **实时读取**：直接从正在运行的游戏读取，不需要先导出存档。单人游戏可以读取存档中所有已生成的区块（不会生成新地形）。
 - **真实模型与贴图**：使用游戏里实际的方块模型，原版和模组方块都支持；贴图来自游戏当前启用的资源包。
 - **方块实体与实体**：箱子、告示牌、床、旗帜、头颅、模组家具；物品展示框里的物品、盔甲架、掉落物、画等；生物可选。
 - **流体与动画贴图**：水、岩浆的高度与流动；动画贴图（水、岩浆、风扇等）按游戏里的帧时间展开成循环播放的图像序列。
-- **材质**：图像纹理（最近邻插值，保持像素风）→ 原理化 BSDF，平直着色。群系染色（草、树叶、水）烘焙进贴图；镂空、半透明、发光分别按游戏的渲染层处理。
+- **渲染层**：镂空（树叶、玻璃板）的 Alpha 按游戏规则处理；半透明（水、彩色玻璃）单独成材质；发光方块带自发光。
 - **PBR**：资源包带 LabPBR 贴图（`_n` / `_s`）时，自动连接法线、凹凸、粗糙度、金属度和自发光。
-- **资源包变化自动更新**：在游戏里换了资源包后重新导入，Blender 里的贴图会自动替换。
-- **三种导入方式**：合并为一个物体 / 按方块类型拆分 / 按单个方块拆分（原点在方块底面中心，方便做动画）。
-- **合并相邻同材质面**：大幅减少墙面、地面这类整块方块的面数。
-- **两种框选方式**：Blender 里的独立地图选区窗口，或游戏内的选区棒。
+- **三种导入方式**：合并为一个物体 / 按方块类型拆分 / 按单个方块拆分。
+- **合并相邻同材质面**：大幅减少整块方块的面数。
+- **两种框选方式**：Blender 里的独立地图选区窗口（分块加载、拖拽框选、自动高度），或游戏内的选区棒。
+- **兼容 Blender 4.0 ~ 5.3**。
 
 ## 安装
 
@@ -123,6 +158,8 @@ Mine2Blend 由两部分组成：
 ## English summary
 
 **Mine2Blend** imports a region of a *running* Minecraft world into Blender as a textured mesh.
+
+**Clean import is the core idea.** Every material is just *Image Texture → Principled BSDF*: no node groups, no mix nodes, no custom shaders. Biome tints are baked into the textures. The selection never creates helper objects. Shading is flat, and textures use closest-pixel interpolation. Extra PBR nodes are added only when a LabPBR resource pack is active, and you can turn them off.
 
 - **Mod** (Minecraft 1.20.1, Fabric + Fabric API): adds a selection wand (`/m2b wand`) and a read-only local HTTP interface (`127.0.0.1:25599` by default) that serves block models, textures, block entities and entities.
 - **Blender add-on** (Blender 4.0 – 5.3): opens a standalone top-down map window of the live world. Drag to select an area, press Enter to import. You can also import the in-game wand selection.
