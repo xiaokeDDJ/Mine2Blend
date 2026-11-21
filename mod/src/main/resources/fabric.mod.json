@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "id": "mine2blend",
+  "id": "mineblend",
   "version": "${version}",
-  "name": "Mine2Blend",
-  "description": "Mine2Blend：把正在运行的 Minecraft 世界实时导入 Blender（选区棒 + 本地接口）",
-  "authors": ["Mine2Blend contributors"],
+  "name": "MineBlend",
+  "description": "MineBlend：把正在运行的 Minecraft 世界实时导入 Blender（选区棒 + 本地接口）",
+  "authors": ["MineBlend contributors"],
   "license": "GPL-3.0-or-later",
   "environment": "*",
   "entrypoints": {
-    "main": ["mine2blend.Mine2Blend"],
-    "client": ["mine2blend.Mine2BlendClient"]
+    "main": ["mineblend.MineBlend"],
+    "client": ["mineblend.MineBlendClient"]
   },
-  "mixins": ["mine2blend.mixins.json"],
+  "mixins": ["mineblend.mixins.json"],
   "depends": {
     "fabricloader": ">=0.14.21",
     "minecraft": "~1.20.1",
